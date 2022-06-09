@@ -31,9 +31,9 @@ const houseSchema = new mongoose.Schema({
     lat: Number,
     lng: Number,
   },
-  subCity: [String],
+  subCity: { id: mongoose.Types.ObjectId, name: Sting },
   images: [String],
-  city: String,
+  city: { type: mongoose.Types.ObjectId, ref: "City" },
   features: [String],
   isVerified: Boolean,
   category: {
