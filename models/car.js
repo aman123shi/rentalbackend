@@ -26,6 +26,7 @@ const carSchema = new mongoose.Schema({
     //this is eg in 1 day
     type: Number,
   },
+  prePaidPaymentTerm: Number, // must payed for 1 month or 2,3,4.....
   color: String,
   bodyType: String,
   engineType: String,
