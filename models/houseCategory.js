@@ -11,4 +11,4 @@ const houseCategoryModelSchema = new mongoose.Schema({
 });
 
 const HouseCategory = mongoose.model("HouseCategory", houseCategoryModelSchema);
-module.export.HouseCategory = HouseCategory;
+module.export = HouseCategory;
