@@ -29,7 +29,7 @@ const agentSchema = new mongoose.Schema({
   subCity: { id: mongoose.Types.ObjectId, name: Sting },
   privillage: [
     {
-      name: String, //this will be the Model Name which the privillage is given
+      name: String, //this will be the Model Name in which the privillage is given
       r: Boolean,
       w: Boolean,
       u: Boolean,
