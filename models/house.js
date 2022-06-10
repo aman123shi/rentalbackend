@@ -41,6 +41,7 @@ const houseSchema = new mongoose.Schema({
     ref: "HouseCategory",
     populate: true,
   },
+  quantity: Number,
 });
 
 const House = mongoose.model("House", houseSchema);

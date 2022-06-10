@@ -37,6 +37,7 @@ const carSchema = new mongoose.Schema({
   make: String,
   isVerified: Boolean,
   model: { type: mongoose.Types.ObjectId, ref: "CarModel", populate: true },
+  quantity: Number,
 });
 
 const Car = mongoose.model("Car", carSchema);
