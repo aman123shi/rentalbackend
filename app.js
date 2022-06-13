@@ -4,7 +4,6 @@ const cors = require("cors");
 const config = require("config");
 const mongoose = require("mongoose");
 
-const Admin = require("./models/admin");
 let DB_URL = config.get("db");
 if (app.get("env") === "production") {
   DB_URL = config.get("db-production");
@@ -32,15 +31,3 @@ const port = process.env.PORT || 3000;
 const server = app.listen(port, () =>
   console.log(`Listening on port ${port}.............`)
 );
-dbTest();
-module.exports = server;
-async function dbTest() {
-  let admin = new Admin({
-    firstName: "Bethlehem",
-    lastName: "Taye",
-    email: "bethy@gmail.com",
-    phone: "09314354234",
-    password: "1234",
-  });
-  await admin.save();
-}
