@@ -38,6 +38,7 @@ const carSchema = new mongoose.Schema({
     name: String,
   },
   make: String,
+  status: String,
   isVerified: Boolean,
   model: { type: mongoose.Types.ObjectId, ref: "CarModel", populate: true },
   quantity: Number,

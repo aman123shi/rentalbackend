@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const adSchema = new mongoose.Schema({
   adType: {
-    //featured products or other commercial
+    //House or Car products or other commercial
     type: String,
     required: true,
     min: 1,
@@ -22,6 +22,14 @@ const adSchema = new mongoose.Schema({
     type: Date,
     default: function () {
       return this.createdAt * duration;
+    },
+  },
+  property: {
+    type: mongoose.Types.ObjectId,
+    ref: function () {
+      return this.adType === "House" || this.adType === "Car"
+        ? this.adType
+        : null;
     },
   },
   createdAt: { type: Date, default: Date.now },

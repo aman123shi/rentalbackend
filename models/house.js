@@ -39,6 +39,7 @@ const houseSchema = new mongoose.Schema({
   },
   features: [String],
   isVerified: Boolean,
+  status: String,
   category: {
     type: mongoose.Types.ObjectId,
     ref: "HouseCategory",
