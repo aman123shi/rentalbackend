@@ -1,3 +1,4 @@
 {
-    "jwtPrivateKey": "vidlyjwtPrivateKey"
+  "jwtPrivateKey": "Ethio_Rental_Private_Key",
+  "db-production": "Rental_DB"
 }

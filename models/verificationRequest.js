@@ -23,4 +23,4 @@ const VerificationRequest = mongoose.model(
   "VerificationRequest",
   verificationRequestSchema
 );
-module.export = VerificationRequest;
+module.exports = VerificationRequest;
