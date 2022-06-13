@@ -17,6 +17,7 @@ const adSchema = new mongoose.Schema({
   city: String,
   postedBy: { type: mongoose.Types.ObjectId, ref: "Admin" },
   status: String,
+  images: [String],
   endDate: {
     type: Date,
     default: function () {

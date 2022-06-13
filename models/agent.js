@@ -26,10 +26,10 @@ const agentSchema = new mongoose.Schema({
     type: String,
   },
   city: { type: mongoose.Types.ObjectId, ref: "City" },
-  subCity: { id: mongoose.Types.ObjectId, name: Sting },
-  privillage: [
+  subCity: { id: mongoose.Types.ObjectId, name: String },
+  privilege: [
     {
-      name: String, //this will be the Model Name in which the privillage is given
+      name: String, //this will be the Model Name in which the privilege is given
       r: Boolean,
       w: Boolean,
       u: Boolean,

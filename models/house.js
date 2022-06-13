@@ -33,7 +33,10 @@ const houseSchema = new mongoose.Schema({
   },
   subCity: { id: mongoose.Types.ObjectId, name: Sting },
   images: [String],
-  city: { type: mongoose.Types.ObjectId, ref: "City" },
+  city: {
+    id: mongoose.Types.ObjectId,
+    name: String,
+  },
   features: [String],
   isVerified: Boolean,
   category: {

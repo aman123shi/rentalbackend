@@ -33,7 +33,10 @@ const carSchema = new mongoose.Schema({
   transmission: String,
   features: [String],
   images: [String],
-  city: String,
+  city: {
+    id: mongoose.Types.ObjectId,
+    name: String,
+  },
   make: String,
   isVerified: Boolean,
   model: { type: mongoose.Types.ObjectId, ref: "CarModel", populate: true },
