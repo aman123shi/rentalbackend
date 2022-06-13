@@ -1,4 +1,7 @@
 const mongoose = require("mongoose");
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcrypt");
+const config = require("config");
 const agentSchema = new mongoose.Schema({
   firstName: {
     type: String,
@@ -38,6 +41,19 @@ const agentSchema = new mongoose.Schema({
     },
   ],
 });
-
+agentSchema.methods.generateAuthToken = function () {
+  let token = jwt.sign(
+    {
+      _id: this._id,
+      privilege: this.privilege,
+    },
+    config.get("jwtPrivateKey")
+  );
+  return token;
+};
+agentSchema.methods.hashPassword = async function () {
+  let salt = await bcrypt.genSalt(10);
+  this.password = await bcrypt.hash(this.password, salt);
+};
 const Agent = mongoose.model("Agent", agentSchema);
 module.exports = Agent;
