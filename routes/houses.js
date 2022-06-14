@@ -3,7 +3,8 @@ const express = require("express");
 const router = express.Router();
 const House = require("../models/house");
 const validateHouse = require("../helpers/joi/house-validator");
-
+const upload = require("../helpers/uploads");
+const guard = require("../middlewares/guard");
 //GET api/houses
 router.get("/", async (req, res) => {
   const houses = await House.find().sort("-_id").select("-__v");
@@ -11,7 +12,7 @@ router.get("/", async (req, res) => {
 });
 
 //POST api/houses
-router.post("/", async (req, res) => {
+router.post("/", upload.array("images", 4), async (req, res) => {
   const error = validateHouse(req.body);
   if (error)
     return res.status(400).send({ success: false, message: error.message });
@@ -27,7 +28,6 @@ router.post("/", async (req, res) => {
       "city",
       "subCity",
       "prePaidPaymentTerm",
-      "images",
       "location",
       "features",
       "isVerified",
@@ -37,11 +37,12 @@ router.post("/", async (req, res) => {
       "quantity",
     ])
   );
-  await house.hashPassword();
+  for (let image of req.files) house.images.push("images/" + image.filename);
+
   await house.save();
   res.send({
     success: true,
-    body: _.omit(house.toJSON(), ["password", "__v"]),
+    body: _.omit(house.toJSON(), ["__v"]),
   });
 });
 
@@ -52,22 +53,26 @@ router.put("/:id", async (req, res) => {
     res.status(400).send({ success: false, message: error.message });
     return;
   }
-  if (req.body.password) {
-    let salt = await bcrypt.genSalt(10);
-    req.body.password = await bcrypt.hash(req.body.password, salt);
-  }
+
   let house = await House.findByIdAndUpdate(
     req.params.id,
     {
       $set: _.pick(req.body, [
-        "firstName",
-        "lastName",
-        "email",
-        "phone",
-        "password",
+        "headerTitle",
+        "description",
+        "price",
+        "pricingRate",
+        "size",
         "city",
         "subCity",
-        "privilege",
+        "prePaidPaymentTerm",
+        "location",
+        "features",
+        "isVerified",
+        "status",
+        "category",
+        "owner",
+        "quantity",
       ]),
     },
     {
@@ -83,7 +88,7 @@ router.put("/:id", async (req, res) => {
   }
   res.send({
     success: true,
-    body: _.omit(house.toJSON(), ["password", "__v"]),
+    body: _.omit(house.toJSON(), ["__v"]),
   });
 });
 
@@ -100,7 +105,7 @@ router.delete("/:id", async (req, res) => {
 
   res.send({
     success: true,
-    body: _.omit(house.toJSON(), ["password", "__V"]),
+    body: _.omit(house.toJSON(), ["__V"]),
   });
 });
 module.exports = router;
