@@ -4,6 +4,10 @@ const cors = require("cors");
 const config = require("config");
 const mongoose = require("mongoose");
 
+//routes
+const agents = require("./routes/agents");
+const cities = require("./routes/cities");
+
 let DB_URL = config.get("db");
 if (app.get("env") === "production") {
   DB_URL = config.get("db-production");
@@ -26,8 +30,13 @@ if (!config.get("jwtPrivateKey")) {
   );
   process.exit(1);
 }
+//mapping routes
+app.use("/api/agents", agents);
+app.use("/api/cities", cities);
+
 console.log(config.get("jwtPrivateKey") + " == privatekey for jwt");
 const port = process.env.PORT || 3000;
 const server = app.listen(port, () =>
   console.log(`Listening on port ${port}.............`)
 );
+//cities

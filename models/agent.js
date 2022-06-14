@@ -29,7 +29,7 @@ const agentSchema = new mongoose.Schema({
     type: String,
   },
   city: { type: mongoose.Types.ObjectId, ref: "City" },
-  subCity: { id: mongoose.Types.ObjectId, name: String },
+  subCity: [{ name: String }],
   privilege: [
     {
       name: String, //this will be the Model Name in which the privilege is given
@@ -44,7 +44,7 @@ const agentSchema = new mongoose.Schema({
 agentSchema.methods.generateAuthToken = function () {
   let token = jwt.sign(
     {
-      _id: this._id,
+      id: this._id,
       privilege: this.privilege,
     },
     config.get("jwtPrivateKey")

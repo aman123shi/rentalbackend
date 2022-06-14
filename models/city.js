@@ -8,10 +8,9 @@ const citySchema = new mongoose.Schema({
   },
   subCity: [
     {
-      id: {
+      _id: {
         type: mongoose.Types.ObjectId,
         auto: true,
-        index: true,
         required: true,
       },
       name: String,

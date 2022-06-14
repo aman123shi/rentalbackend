@@ -1,6 +1,6 @@
 const Joi = require("joi");
 Joi.objectId = require("joi-objectid")(Joi);
-module.exports = function (customer) {
+module.exports = function (agent) {
   const schema = Joi.object({
     firstName: Joi.string().min(3).max(40).required(),
     lastName: Joi.string().min(3).max(40).required(),
@@ -8,10 +8,9 @@ module.exports = function (customer) {
     email: Joi.string().email().required(),
     password: Joi.string().min(6).max(20).required(),
     city: Joi.objectId(),
-    subCity: {
-      id: Joi.objectId(),
+    subCity: Joi.array().items({
       name: Joi.string().min(1).max(40),
-    },
+    }),
     privilege: Joi.array().items(
       Joi.object({
         name: Joi.string().max(50),
@@ -23,6 +22,7 @@ module.exports = function (customer) {
       })
     ),
   });
-  const { error } = schema.validate(customer);
+  const { error } = schema.validate(agent);
+  console.log("message :", JSON.stringify(error));
   return error;
 };

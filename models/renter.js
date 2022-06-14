@@ -1,4 +1,7 @@
 const mongoose = require("mongoose");
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcrypt");
+const config = require("config");
 const renterSchema = new mongoose.Schema({
   firstName: {
     type: String,
@@ -27,6 +30,18 @@ const renterSchema = new mongoose.Schema({
   posts: [mongoose.Types.ObjectId],
   balance: Number,
 });
-
+renterSchema.methods.generateAuthToken = function () {
+  let token = jwt.sign(
+    {
+      id: this._id,
+    },
+    config.get("jwtPrivateKey")
+  );
+  return token;
+};
+renterSchema.methods.hashPassword = async function () {
+  let salt = await bcrypt.genSalt(10);
+  this.password = await bcrypt.hash(this.password, salt);
+};
 const Renter = mongoose.model("Renter", renterSchema);
 module.exports = Renter;
