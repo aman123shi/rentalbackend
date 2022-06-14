@@ -28,6 +28,7 @@ app.use(
     extended: true,
   })
 );
+app.use(express.static(__dirname + "./public/"));
 if (!config.get("jwtPrivateKey")) {
   console.log(
     "FATAL ERROR: jwtPrivatekey not defined in environmental variable == ",

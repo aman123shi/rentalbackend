@@ -6,6 +6,9 @@ const bcrypt = require("bcrypt");
 const renterValidator = require("../helpers/joi/renter-validator");
 const guard = require("../middlewares/guard");
 const adminGuard = require("../middlewares/adminGuard");
+const House = require("../models/house");
+const Car = require("../models/car");
+
 //GET api/renters
 //accessed by Agent and Admin
 router.get("/", adminGuard, async (req, res) => {
@@ -13,12 +16,39 @@ router.get("/", adminGuard, async (req, res) => {
   res.send({ success: true, body: renters });
 });
 
+//GET api/renters
+//accessed by Renter
+router.get("/get/properties", guard, async (req, res) => {
+  let id = req.user.id;
+  const renter = await Renter.findById(id).select("property");
+  let houses = [],
+    cars = [],
+    houseIds = [],
+    carIds = [];
+  if (renter.property.length > 0) {
+    //collecting property arrays into Car and House
+    for (let p of renter.property) {
+      if (p.propertyType === "House") houseIds.push(p.id);
+      else carIds.push(p.id);
+    }
+    // querying for each
+    if (houseIds.length > 0) {
+      houses = await House.find({ _id: { $in: houseIds } }).select("-__v ");
+    }
+    if (carIds.length > 0) {
+      cars = await Car.find({ _id: { $in: carIds } }).select("-__v ");
+    }
+    res.send({ success: true, body: { houses, cars } });
+  } else {
+    //if no property return empty Array
+    res.send({ success: true, body: { houses, cars } });
+  }
+});
+
 //POST api/renters
 //accessed by renters for registration
 router.post("/", async (req, res) => {
   const error = renterValidator(req.body);
-  console.log("renter validator ", error);
-  console.log("/post called");
   if (error)
     return res.status(400).send({ success: false, message: error.message });
   let renter = await Renter.findOne({
