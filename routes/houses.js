@@ -15,24 +15,26 @@ router.post("/", async (req, res) => {
   const error = validateHouse(req.body);
   if (error)
     return res.status(400).send({ success: false, message: error.message });
-  let house = await House.findOne({
-    phone: req.body.phone,
-  });
-  if (house) {
-    return res
-      .status(400)
-      .send({ success: false, message: "User already exist" });
-  }
-  house = new House(
+
+  req.body.owner = req.body.user.id;
+  let house = new House(
     _.pick(req.body, [
-      "firstName",
-      "lastName",
-      "email",
-      "phone",
-      "password",
+      "headerTitle",
+      "description",
+      "price",
+      "pricingRate",
+      "size",
       "city",
       "subCity",
-      "privilege",
+      "prePaidPaymentTerm",
+      "images",
+      "location",
+      "features",
+      "isVerified",
+      "status",
+      "category",
+      "owner",
+      "quantity",
     ])
   );
   await house.hashPassword();

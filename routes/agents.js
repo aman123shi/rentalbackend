@@ -38,9 +38,13 @@ router.post("/", async (req, res) => {
   );
   await agent.hashPassword();
   await agent.save();
+
+  let token = await agent.generateAuthToken();
+
   res.send({
     success: true,
     body: _.omit(agent.toJSON(), ["password", "__v"]),
+    token,
   });
 });
 

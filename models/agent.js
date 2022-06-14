@@ -45,6 +45,7 @@ agentSchema.methods.generateAuthToken = function () {
   let token = jwt.sign(
     {
       id: this._id,
+      userType: "agent",
       privilege: this.privilege,
     },
     config.get("jwtPrivateKey")

@@ -31,7 +31,7 @@ const houseSchema = new mongoose.Schema({
     lat: Number,
     lng: Number,
   },
-  subCity: { id: mongoose.Types.ObjectId, name: Sting },
+  subCity: { id: mongoose.Types.ObjectId, name: String },
   images: [String],
   city: {
     id: mongoose.Types.ObjectId,
@@ -39,7 +39,7 @@ const houseSchema = new mongoose.Schema({
   },
   features: [String],
   isVerified: Boolean,
-  status: String,
+  status: String, // posted pending declined
   category: {
     type: mongoose.Types.ObjectId,
     ref: "HouseCategory",

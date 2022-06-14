@@ -26,7 +26,7 @@ const renterSchema = new mongoose.Schema({
     type: String,
   },
   city: { type: mongoose.Types.ObjectId, ref: "City" },
-  subCity: { id: mongoose.Types.ObjectId, name: Sting },
+  subCity: { id: mongoose.Types.ObjectId, name: String },
   posts: [mongoose.Types.ObjectId],
   balance: Number,
 });
@@ -34,6 +34,7 @@ renterSchema.methods.generateAuthToken = function () {
   let token = jwt.sign(
     {
       id: this._id,
+      userType: "renter",
     },
     config.get("jwtPrivateKey")
   );

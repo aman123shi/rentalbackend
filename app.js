@@ -4,9 +4,14 @@ const cors = require("cors");
 const config = require("config");
 const mongoose = require("mongoose");
 
+//middleware
+const guard = require("./middlewares/guard");
+
 //routes
 const agents = require("./routes/agents");
 const cities = require("./routes/cities");
+const houses = require("./routes/houses");
+const renters = require("./routes/renters");
 
 let DB_URL = config.get("db");
 if (app.get("env") === "production") {
@@ -33,6 +38,8 @@ if (!config.get("jwtPrivateKey")) {
 //mapping routes
 app.use("/api/agents", agents);
 app.use("/api/cities", cities);
+app.use("/api/renters", renters);
+app.use("/api/houses", houses);
 
 console.log(config.get("jwtPrivateKey") + " == privatekey for jwt");
 const port = process.env.PORT || 3000;
