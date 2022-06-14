@@ -45,6 +45,7 @@ const houseSchema = new mongoose.Schema({
     ref: "HouseCategory",
     populate: true,
   },
+  owner: { type: mongoose.Types.ObjectId, ref: "Renter" },
   quantity: Number,
 });
 
