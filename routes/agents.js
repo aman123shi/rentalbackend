@@ -2,11 +2,12 @@ const _ = require("lodash");
 const express = require("express");
 const router = express.Router();
 const Agent = require("../models/agent");
+const bcrypt = require("bcrypt");
 const agentValidator = require("../helpers/joi/agent-validator");
 
 //GET api/agents
 router.get("/", async (req, res) => {
-  const users = await Agent.find().sort("-_id").select("-password");
+  const users = await Agent.find().sort("-_id").select("-password -__v");
   res.send({ success: true, body: users });
 });
 
@@ -37,7 +38,10 @@ router.post("/", async (req, res) => {
   );
   await agent.hashPassword();
   await agent.save();
-  res.send({ success: true, body: _.omit(agent, ["password"]) });
+  res.send({
+    success: true,
+    body: _.omit(agent.toJSON(), ["password", "__v"]),
+  });
 });
 
 //PUT api/agents
@@ -46,6 +50,10 @@ router.put("/:id", async (req, res) => {
   if (error) {
     res.status(400).send({ success: false, message: error.message });
     return;
+  }
+  if (req.body.password) {
+    let salt = await bcrypt.genSalt(10);
+    req.body.password = await bcrypt.hash(req.body.password, salt);
   }
   let agent = await Agent.findByIdAndUpdate(
     req.params.id,
@@ -72,7 +80,10 @@ router.put("/:id", async (req, res) => {
       .send({ success: false, message: "Agent not found with this id " });
     return;
   }
-  res.send({ success: true, body: _.omit(agent, ["password"]) });
+  res.send({
+    success: true,
+    body: _.omit(agent.toJSON(), ["password", "__v"]),
+  });
 });
 
 //DELETE api/agents
@@ -86,6 +97,9 @@ router.delete("/:id", async (req, res) => {
       .status(404)
       .send({ success: false, message: "Agent not found with this id " });
 
-  res.send({ success: true, body: _.omit(agent, ["password"]) });
+  res.send({
+    success: true,
+    body: _.omit(agent.toJSON(), ["password", "__V"]),
+  });
 });
 module.exports = router;
