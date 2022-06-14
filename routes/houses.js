@@ -2,6 +2,7 @@ const _ = require("lodash");
 const express = require("express");
 const router = express.Router();
 const House = require("../models/house");
+const Renter = require("../models/renter");
 const validateHouse = require("../helpers/joi/house-validator");
 const upload = require("../helpers/uploads");
 const guard = require("../middlewares/guard");
@@ -12,12 +13,14 @@ router.get("/", async (req, res) => {
 });
 
 //POST api/houses
-router.post("/", upload.array("images", 4), async (req, res) => {
+router.post("/", guard, upload.array("images", 4), async (req, res) => {
   const error = validateHouse(req.body);
   if (error)
     return res.status(400).send({ success: false, message: error.message });
 
   req.body.owner = req.body.user.id;
+  let renter = await Renter.findById(req.body.user.id);
+
   let house = new House(
     _.pick(req.body, [
       "headerTitle",
@@ -40,6 +43,8 @@ router.post("/", upload.array("images", 4), async (req, res) => {
   for (let image of req.files) house.images.push("images/" + image.filename);
 
   await house.save();
+  renter.property.push({ propertyType: "House", id: house._id });
+  await renter.save();
   res.send({
     success: true,
     body: _.omit(house.toJSON(), ["__v"]),
