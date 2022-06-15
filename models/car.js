@@ -34,9 +34,10 @@ const carSchema = new mongoose.Schema({
   features: [String],
   images: [String],
   city: {
-    id: mongoose.Types.ObjectId,
-    name: String,
+    type: mongoose.Types.ObjectId,
+    ref: "City",
   },
+  category: String,
   make: String,
   status: String,
   isVerified: Boolean,

@@ -17,8 +17,8 @@ const houseSchema = new mongoose.Schema({
     required: true,
   },
   pricingRate: {
-    //this is eg in 1 day
-    type: Number,
+    //this is per month per year
+    type: String,
     required: true,
     default: 1,
   },
@@ -31,12 +31,10 @@ const houseSchema = new mongoose.Schema({
     lat: Number,
     lng: Number,
   },
-  subCity: { id: mongoose.Types.ObjectId, name: String },
+  subCity: String,
   images: [String],
-  city: {
-    id: mongoose.Types.ObjectId,
-    name: String,
-  },
+  city: { type: mongoose.Types.ObjectId, ref: "City" },
+
   features: [String],
   isVerified: Boolean,
   status: String, // posted pending declined

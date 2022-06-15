@@ -4,7 +4,7 @@ module.exports = function (renter) {
     firstName: Joi.string().min(3).max(40).required(),
     lastName: Joi.string().min(3).max(40).required(),
     phone: Joi.string().min(3).max(20).required(),
-    email: Joi.string().email().required(),
+    email: Joi.string().email(),
     subCity: {
       id: Joi.objectId(),
       name: Joi.string().min(1).max(40),
