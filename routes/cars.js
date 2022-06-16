@@ -7,7 +7,7 @@ const Car = require("../models/car");
 const Renter = require("../models/renter");
 //const Agent = require("../models/agent");
 const validateCar = require("../helpers/joi/car-validator");
-const upload = require("../helpers/uploads");
+const { upload } = require("../helpers/uploads");
 const guard = require("../middlewares/guard");
 const adminGuard = require("../middlewares/adminGuard");
 

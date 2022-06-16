@@ -7,7 +7,7 @@ const validateObjectId = require("../middlewares/validdateObjectId");
 const Renter = require("../models/renter");
 const Agent = require("../models/agent");
 const validateHouse = require("../helpers/joi/house-validator");
-const upload = require("../helpers/uploads");
+const { upload } = require("../helpers/uploads");
 const guard = require("../middlewares/guard");
 const adminGuard = require("../middlewares/adminGuard");
 
