@@ -1,10 +1,12 @@
 const _ = require("lodash");
+const fs = require("fs");
 const express = require("express");
 const router = express.Router();
 const Ad = require("../models/advertisment");
 const bcrypt = require("bcrypt");
 const adValidator = require("../helpers/joi/ad-validator");
 const superAdminGuard = require("../middlewares/super-admin-guard");
+
 const { uploadAd } = require("../helpers/uploads");
 //GET api/ads
 router.get("/", async (req, res) => {
@@ -17,15 +19,8 @@ router.post("/", uploadAd.array("images", 2), async (req, res) => {
   const error = adValidator(req.body);
   if (error)
     return res.status(400).send({ success: false, message: error.message });
-  let ad = await Ad.findOne({
-    phone: req.body.phone,
-  });
-  if (ad) {
-    return res
-      .status(400)
-      .send({ success: false, message: "User already exist" });
-  }
-  ad = new Ad(
+
+  let ad = new Ad(
     _.pick(req.body, [
       "adType",
       "duration",
@@ -36,6 +31,7 @@ router.post("/", uploadAd.array("images", 2), async (req, res) => {
       "images",
     ])
   );
+  for (let image of req.files) ad.images.push("ads/" + image.filename);
   await ad.save();
 
   res.send({

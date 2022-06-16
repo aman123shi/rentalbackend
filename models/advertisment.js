@@ -21,7 +21,7 @@ const adSchema = new mongoose.Schema({
   endDate: {
     type: Date,
     default: function () {
-      return this.createdAt * duration;
+      return this.updatedAt;
     },
   },
   property: {
