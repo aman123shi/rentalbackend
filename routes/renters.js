@@ -148,9 +148,11 @@ router.post("/signup", async (req, res) => {
   );
 
   await renter.save();
+  let token = await renter.generateAuthToken();
   res.send({
     success: true,
     body: _.omit(renter.toJSON(), ["password", "__v"]),
+    token,
   });
 });
 
