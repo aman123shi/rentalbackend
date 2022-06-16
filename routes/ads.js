@@ -13,7 +13,7 @@ router.get("/", async (req, res) => {
 });
 
 //POST api/ads
-router.post("/", async (req, res) => {
+router.post("/", uploadAd, async (req, res) => {
   const error = adValidator(req.body);
   if (error)
     return res.status(400).send({ success: false, message: error.message });
@@ -27,25 +27,20 @@ router.post("/", async (req, res) => {
   }
   ad = new Ad(
     _.pick(req.body, [
-      "firstName",
-      "lastName",
-      "email",
-      "phone",
-      "password",
-      "city",
-      "subCity",
-      "privilege",
+      "adType",
+      "duration",
+      "title",
+      "description",
+      "postedBy",
+      "status",
+      "images",
     ])
   );
-  await ad.hashPassword();
   await ad.save();
-
-  let token = await ad.generateAuthToken();
 
   res.send({
     success: true,
-    body: _.omit(ad.toJSON(), ["password", "__v"]),
-    token,
+    body: _.omit(ad.toJSON(), ["__v"]),
   });
 });
 
@@ -64,14 +59,13 @@ router.put("/:id", async (req, res) => {
     req.params.id,
     {
       $set: _.pick(req.body, [
-        "firstName",
-        "lastName",
-        "email",
-        "phone",
-        "password",
-        "city",
-        "subCity",
-        "privilege",
+        "adType",
+        "duration",
+        "title",
+        "description",
+        "postedBy",
+        "status",
+        "images",
       ]),
     },
     {
@@ -87,24 +81,39 @@ router.put("/:id", async (req, res) => {
   }
   res.send({
     success: true,
-    body: _.omit(ad.toJSON(), ["password", "__v"]),
+    body: _.omit(ad.toJSON(), ["__v"]),
   });
 });
 
 //DELETE api/ads
 
 router.delete("/:id", async (req, res) => {
-  let ad = await Ad.deleteOne({
-    _id: req.params.id,
-  });
+  let ad = await Ad.findByIdAndRemove(req.params.id);
   if (!ad)
     return res
       .status(404)
       .send({ success: false, message: "Ad not found with this id " });
-
+  //Delete images from a file
+  try {
+    //getting every images of the house from collection and delete it from a file storage
+    for (let imagePath of ad.images)
+      fs.unlink("./public/" + imagePath, (err) => {
+        if (err) throw err;
+      });
+  } catch (err) {
+    if (err && err.code == "ENOENT") {
+      console.info("File doesn't exist, won't remove it.");
+      return res.send({ success: false, message: "sorry can't find file" });
+    } else if (err) {
+      console.error("Error occurred while trying to remove file");
+      return res.send({ success: false, message: err.message });
+    } else {
+      console.info(`removed`);
+    }
+  }
   res.send({
     success: true,
-    body: _.omit(ad.toJSON(), ["password", "__V"]),
+    body: _.omit(ad.toJSON(), ["__V"]),
   });
 });
 module.exports = router;
