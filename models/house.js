@@ -37,6 +37,7 @@ const houseSchema = new mongoose.Schema({
 
   features: [String],
   isVerified: Boolean,
+  isApproved: Boolean,
   status: String, // posted pending declined
   category: {
     type: mongoose.Types.ObjectId,

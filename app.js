@@ -11,6 +11,7 @@ const guard = require("./middlewares/guard");
 const agents = require("./routes/agents");
 const cities = require("./routes/cities");
 const houses = require("./routes/houses");
+const cars = require("./routes/cars");
 const renters = require("./routes/renters");
 
 let DB_URL = config.get("db");
@@ -41,6 +42,7 @@ app.use("/api/agents", agents);
 app.use("/api/cities", cities);
 app.use("/api/renters", renters);
 app.use("/api/houses", houses);
+app.use("/api/cars", cars);
 
 console.log(config.get("jwtPrivateKey") + " == privatekey for jwt");
 const port = process.env.PORT || 3000;
