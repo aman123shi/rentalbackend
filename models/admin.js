@@ -26,6 +26,20 @@ const adminSchema = new mongoose.Schema({
     type: String,
   },
 });
+adminSchema.methods.generateAuthToken = function () {
+  let token = jwt.sign(
+    {
+      id: this._id,
+      userType: "admin",
+    },
+    config.get("jwtPrivateKey")
+  );
+  return token;
+};
+adminSchema.methods.hashPassword = async function () {
+  let salt = await bcrypt.genSalt(10);
+  this.password = await bcrypt.hash(this.password, salt);
+};
 
 const Admin = mongoose.model("Admin", adminSchema);
 module.exports = Admin;
