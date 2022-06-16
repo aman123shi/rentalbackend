@@ -115,11 +115,6 @@ router.put("/:id", async (req, res) => {
 //DELETE api/houses
 
 router.post("/delete/:houseId", async (req, res) => {
-  //req.body.houseId
-  //req.body.renterId
-  //owner 62a9bd358363353a09933e07
-  //houseId 62a9c31442f3ca7c51e06265
-  console.log("id from body " + req.body);
   let house = await House.findByIdAndRemove(req.params.houseId);
   if (!house)
     return res
@@ -127,7 +122,7 @@ router.post("/delete/:houseId", async (req, res) => {
       .send({ success: false, message: "House not found with this id " });
   //Delete images from a file
   try {
-    //getting every images of the house from collection and delete them from file storage
+    //getting every images of the house from collection and delete it from a file storage
     for (let imagePath of house.images)
       fs.unlink("./public/" + imagePath, (err) => {
         if (err) throw err;
