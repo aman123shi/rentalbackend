@@ -124,6 +124,35 @@ router.put("/:id", guard, async (req, res) => {
     body: _.omit(renter.toJSON(), ["password", "__v"]),
   });
 });
+//POST api/renters/signup
+//accessed by renters and agents
+router.post("/signup", async (req, res) => {
+  const error = renterValidator(req.body);
+  if (error) {
+    res.status(400).send({ success: false, message: error.message });
+    return;
+  }
+  if (req.body.password) {
+    let salt = await bcrypt.genSalt(10);
+    req.body.password = await bcrypt.hash(req.body.password, salt);
+  }
+  let renter = new Renter(
+    _.pick(req.body, [
+      "firstName",
+      "lastName",
+      "phone",
+      "password",
+      "city",
+      "subCity",
+    ])
+  );
+
+  await renter.save();
+  res.send({
+    success: true,
+    body: _.omit(renter.toJSON(), ["password", "__v"]),
+  });
+});
 
 //DELETE api/renters
 
