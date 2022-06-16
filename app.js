@@ -14,6 +14,7 @@ const houses = require("./routes/houses");
 const cars = require("./routes/cars");
 const ads = require("./routes/ads");
 const renters = require("./routes/renters");
+const login = require("./routes/login");
 
 let DB_URL = config.get("db");
 if (app.get("env") === "production") {
@@ -45,6 +46,7 @@ app.use("/api/renters", renters);
 app.use("/api/houses", houses);
 app.use("/api/cars", cars);
 app.use("/api/ads", ads);
+app.use("/api/login", login);
 
 console.log(config.get("jwtPrivateKey") + " == privatekey for jwt");
 const port = process.env.PORT || 3000;

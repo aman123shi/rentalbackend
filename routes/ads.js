@@ -13,7 +13,7 @@ router.get("/", async (req, res) => {
 });
 
 //POST api/ads
-router.post("/", uploadAd, async (req, res) => {
+router.post("/", uploadAd.array("images", 2), async (req, res) => {
   const error = adValidator(req.body);
   if (error)
     return res.status(400).send({ success: false, message: error.message });
