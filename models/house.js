@@ -38,12 +38,8 @@ const houseSchema = new mongoose.Schema({
   features: [String],
   isVerified: Boolean,
   isApproved: Boolean,
-  status: String, // posted pending declined
-  category: {
-    type: mongoose.Types.ObjectId,
-    ref: "HouseCategory",
-    populate: true,
-  },
+  status: { type: String, default: "pending" }, // posted pending declined
+  category: String,
   owner: { type: mongoose.Types.ObjectId, ref: "Renter" },
   quantity: Number,
 });

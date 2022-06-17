@@ -6,6 +6,7 @@ const House = require("../models/house");
 const validateObjectId = require("../middlewares/validdateObjectId");
 const Renter = require("../models/renter");
 const Agent = require("../models/agent");
+const Post = require("../models/post");
 const validateHouse = require("../helpers/joi/house-validator");
 const { upload } = require("../helpers/uploads");
 const guard = require("../middlewares/guard");
@@ -60,6 +61,16 @@ router.post("/", guard, upload.array("images", 4), async (req, res) => {
   await house.save();
   renter.property.push({ propertyType: "House", id: house._id });
   await renter.save();
+  //creating pending post for the agent to verify
+  let post = new Post({
+    postType: "House",
+    house: house._id,
+    propertyCategory: house.category,
+    city: house.city,
+    renter: renter._id,
+    subCity: house.subCity,
+  });
+  await post.save();
   res.send({
     success: true,
     body: _.omit(house.toJSON(), ["__v"]),
@@ -138,7 +149,12 @@ router.post("/delete/:houseId", async (req, res) => {
       console.info(`removed`);
     }
   }
+  //removing from active post if present
+  if (house.status == "active")
+    await Post.findOneAndDelete({ property: req.params.houseId });
+
   //removing property from the renter collection
+
   let renter = await Renter.updateOne(
     { _id: req.body.renterId },
     {

@@ -5,7 +5,7 @@ const router = express.Router();
 const Car = require("../models/car");
 //const validateObjectId = require("../middlewares/validdateObjectId");
 const Renter = require("../models/renter");
-//const Agent = require("../models/agent");
+const Post = require("../models/post");
 const validateCar = require("../helpers/joi/car-validator");
 const { upload } = require("../helpers/uploads");
 const guard = require("../middlewares/guard");
@@ -66,6 +66,15 @@ router.post("/", guard, upload.array("images", 4), async (req, res) => {
   await car.save();
   renter.property.push({ propertyType: "Car", id: car._id });
   await renter.save();
+  // creating pending post
+  let post = new Post({
+    postType: "Car",
+    car: car._id,
+    propertyCategory: car.category,
+    city: car.city,
+    renter: renter._id,
+  });
+  await post.save();
   res.send({
     success: true,
     body: _.omit(car.toJSON(), ["__v"]),
@@ -117,7 +126,7 @@ router.put("/:id", async (req, res) => {
   });
 });
 
-//DELETE api/cars
+//DELETE api/cars/:id
 
 router.post("/delete/:carId", async (req, res) => {
   let car = await Car.findByIdAndRemove(req.params.carId);
@@ -143,6 +152,10 @@ router.post("/delete/:carId", async (req, res) => {
       console.info(`removed`);
     }
   }
+  //removing from active post
+  if (car.status == "active")
+    await Post.findOneAndDelete({ property: req.params.carId });
+
   //removing property from the renter collection
   let renter = await Renter.updateOne(
     { _id: req.body.renterId },

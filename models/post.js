@@ -7,19 +7,20 @@ const postSchema = new mongoose.Schema({
     min: 1,
     max: 255,
   },
-  property: {
+  house: {
     type: mongoose.Types.ObjectId,
-    required: true,
-    ref: function () {
-      return this.postType;
-    },
+    ref: "House",
   },
-
+  car: {
+    type: mongoose.Types.ObjectId,
+    ref: "Car",
+  },
+  propertyCategory: String,
   renter: { type: mongoose.Types.ObjectId, ref: "Renter" },
-  city: String,
+  city: { type: mongoose.Types.ObjectId, ref: "City" },
   verifiedBy: { type: mongoose.Types.ObjectId, ref: "Agent" },
-  subCity: { id: mongoose.Types.ObjectId, name: Sting },
-  status: String,
+  subCity: String,
+  status: { type: String, default: "pending" },
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
 });

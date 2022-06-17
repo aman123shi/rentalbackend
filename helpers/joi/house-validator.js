@@ -14,7 +14,7 @@ module.exports = function (house) {
     },
     city: Joi.objectId(),
     subCity: Joi.string().min(1).max(40),
-    category: Joi.objectId(),
+    category: Joi.string(),
     features: Joi.array().items(Joi.string().max(30)),
     images: Joi.array().items(Joi.string().max(255)),
     quantity: Joi.number().required(),
