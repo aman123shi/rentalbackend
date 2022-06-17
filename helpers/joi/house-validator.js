@@ -7,6 +7,8 @@ module.exports = function (house) {
     price: Joi.number().required(),
     pricingRate: Joi.string().required(),
     size: Joi.number().required(),
+    bedroom: Joi.number(),
+    bathroom: Joi.number(),
     prePaidPaymentTerm: Joi.number(),
     location: {
       lat: Joi.number(),

@@ -24,14 +24,17 @@ const adSchema = new mongoose.Schema({
       return this.updatedAt;
     },
   },
-  property: {
+  house: {
     type: mongoose.Types.ObjectId,
-    ref: function () {
-      return this.adType === "House" || this.adType === "Car"
-        ? this.adType
-        : null;
-    },
+    ref: "House",
   },
+  car: {
+    type: mongoose.Types.ObjectId,
+    ref: "Car",
+  },
+  viewCounter: { type: Number, default: 0 },
+  clickCounter: { type: Number, default: 0 },
+  viewLimit: { type: Number },
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
 });

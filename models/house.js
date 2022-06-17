@@ -31,6 +31,8 @@ const houseSchema = new mongoose.Schema({
     lat: Number,
     lng: Number,
   },
+  bathroom: Number,
+  bedroom: Number,
   subCity: String,
   images: [String],
   city: { type: mongoose.Types.ObjectId, ref: "City" },
