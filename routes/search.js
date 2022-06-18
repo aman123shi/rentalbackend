@@ -26,7 +26,7 @@ router.get("/houses/:category", async (req, res) => {
     .select("house")
     .skip((pageNumber - 1) * limit) //pagination
     .limit(limit); // items per page
-  houses = houses.map((h) => h.house);
+  houses = houses.filter((h) => h.house !== null).map((h) => h.house);
   res.send({ success: true, body: houses });
 });
 
@@ -35,28 +35,34 @@ router.post("/houses/by-criteria", async (req, res) => {
   const error = validateCriteria(req.body);
   if (error)
     return res.status(400).send({ success: false, message: error.message });
-  (pageNumber = 1), (limit = 10);
-  let query = {
+  let pageNumber = 1,
+    limit = 10;
+  let postQuery = {
     propertyType: "House",
     propertyCategory: req.body.category,
-    "house.price": { $gte: req.body.minPrice },
-    "house.price": { $lte: req.body.maxPrice },
     city: req.body.city,
     status: "pending",
   };
-  if (req.body.subCity) query.subCity = req.body.subCity;
-  if (req.body.bathroom) query["house.bathroom"] = { $gte: req.body.bathroom };
-  if (req.body.bedroom) query["house.bathroom"] = { $gte: req.body.bedroom };
+  let populateQuery = {
+    price: { $gte: req.body.minPrice, $lte: req.body.maxPrice },
+  };
+  if (req.body.subCity) postQuery.subCity = req.body.subCity;
+  if (req.body.bathroom)
+    populateQuery["bathroom"] = { $gte: req.body.bathroom };
+  if (req.body.bedroom) populateQuery["bedroom"] = { $gte: req.body.bedroom };
 
   pageNumber = Number.parseInt(req.query.page || 1);
   limit = Number.parseInt(req.query.limit || 10);
-  let houses = await Post.find(query)
+  let houses = await Post.find(postQuery)
     .sort("createdAt")
-    .populate("house") //populate house property in Post
+    .populate({
+      path: "house",
+      match: populateQuery,
+    }) //populate house property in Post
     .select("house") // just select only house field
     .skip((pageNumber - 1) * limit) //pagination
     .limit(limit); // items per page
-  houses = houses.map((h) => h.house);
+  houses = houses.filter((h) => h.house !== null).map((h) => h.house);
   res.send({ success: true, body: houses });
 });
 
