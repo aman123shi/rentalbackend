@@ -37,7 +37,6 @@ const houseSchema = new mongoose.Schema({
       type: [Number],
       required: true,
     },
-    index: "2dsphere",
   },
   bathroom: Number,
   bedroom: Number,
@@ -53,7 +52,7 @@ const houseSchema = new mongoose.Schema({
   owner: { type: mongoose.Types.ObjectId, ref: "Renter" },
   quantity: Number,
 });
-
+houseSchema.index({ location: "2dsphere" });
 const House = mongoose.model("House", houseSchema);
-House.createIndexes({});
+
 module.exports = House;
