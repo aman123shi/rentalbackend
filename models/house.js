@@ -28,8 +28,16 @@ const houseSchema = new mongoose.Schema({
   },
   prePaidPaymentTerm: Number, // must payed for 1 month or 2,3,4.....
   location: {
-    lat: Number,
-    lng: Number,
+    type: {
+      type: String, // Don't do `{ location: { type: String } }`
+      enum: ["Point"], // 'location.type' must be 'Point'
+      default: "Point",
+    },
+    coordinates: {
+      type: [Number],
+      required: true,
+    },
+    index: "2dsphere",
   },
   bathroom: Number,
   bedroom: Number,
@@ -47,4 +55,5 @@ const houseSchema = new mongoose.Schema({
 });
 
 const House = mongoose.model("House", houseSchema);
+House.createIndexes({});
 module.exports = House;

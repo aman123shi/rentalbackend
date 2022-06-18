@@ -56,6 +56,10 @@ router.post("/", guard, upload.array("images", 4), async (req, res) => {
       "quantity",
     ])
   );
+  if (req.body.location) {
+    house.location.coordinates[0] = Number.parseFloat(req.body.location.lng);
+    house.location.coordinates[1] = Number.parseFloat(req.body.location.lat);
+  }
   for (let image of req.files) house.images.push("images/" + image.filename);
 
   await house.save();
