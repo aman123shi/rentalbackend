@@ -21,7 +21,7 @@ router.get("/", adminGuard, async (req, res) => {
     let agent = await Agent.findById(req.user.id);
     cityId = agent._id;
     for (let sc of agent.subCity) subCity.push(sc.name);
-    query = { "city.id": cityId, "subCity.name": { $in: subCity } };
+    query = { city: cityId, subCity: { $in: subCity } };
   }
 
   const houses = await House.find(query).sort("-_id").select("-__v");
