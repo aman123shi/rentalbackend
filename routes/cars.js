@@ -63,7 +63,6 @@ router.post("/", guard, upload.array("images", 4), async (req, res) => {
   );
   for (let image of req.files) car.images.push("images/" + image.filename);
 
-  await car.save();
   renter.property.push({ propertyType: "Car", id: car._id });
   await renter.save();
   // creating pending post
@@ -74,6 +73,16 @@ router.post("/", guard, upload.array("images", 4), async (req, res) => {
     city: car.city,
     renter: renter._id,
   });
+  if (req.user.userType === "agent") {
+    car.agent = req.user.id;
+    car.isApproved = true;
+    car.isVerified = true;
+    post.verifiedBy = req.user.id;
+    post.agent = req.user.id;
+    post.isAgentPost = true;
+    post.status = "active";
+  }
+  await car.save();
   await post.save();
   res.send({
     success: true,
@@ -157,17 +166,18 @@ router.post("/delete/:carId", async (req, res) => {
     await Post.findOneAndDelete({ property: req.params.carId });
 
   //removing property from the renter collection
-  let renter = await Renter.updateOne(
-    { _id: req.body.renterId },
-    {
-      $pull: {
-        property: { id: req.body.carId },
-      },
-    }
-  );
-  if (!renter)
-    return res.send({ success: false, message: "sorry can't find renter" });
-
+  if (req.user.userType == "renter") {
+    let renter = await Renter.updateOne(
+      { _id: req.body.renterId },
+      {
+        $pull: {
+          property: { id: req.body.carId },
+        },
+      }
+    );
+    if (!renter)
+      return res.send({ success: false, message: "sorry can't find renter" });
+  }
   res.send({
     success: true,
   });

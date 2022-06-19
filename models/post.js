@@ -20,6 +20,8 @@ const postSchema = new mongoose.Schema({
   city: { type: mongoose.Types.ObjectId, ref: "City" },
   verifiedBy: { type: mongoose.Types.ObjectId, ref: "Agent" },
   subCity: String,
+  isAgentPost: Boolean,
+  agent: { type: mongoose.Types.ObjectId, ref: "Agent" },
   status: { type: String, default: "pending" },
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },

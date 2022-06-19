@@ -43,12 +43,13 @@ const houseSchema = new mongoose.Schema({
   subCity: String,
   images: [String],
   city: { type: mongoose.Types.ObjectId, ref: "City" },
-
+  agentComment: String,
   features: [String],
   isVerified: Boolean,
   isApproved: Boolean,
   status: { type: String, default: "pending" }, // posted pending declined
   category: String,
+  agent: { type: mongoose.Types.ObjectId, ref: "Agent" },
   owner: { type: mongoose.Types.ObjectId, ref: "Renter" },
   quantity: Number,
 });

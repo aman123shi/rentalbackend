@@ -40,6 +40,8 @@ const carSchema = new mongoose.Schema({
   category: String,
   make: String,
   status: String,
+  agentComment: String,
+  agent: { type: mongoose.Types.ObjectId, ref: "Agent" },
   isVerified: Boolean,
   isApproved: Boolean,
   owner: { type: mongoose.Types.ObjectId, ref: "Renter" },
