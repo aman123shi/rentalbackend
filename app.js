@@ -19,6 +19,7 @@ const carMakes = require("./routes/carMakes");
 const houseCategories = require("./routes/houseCategories");
 const search = require("./routes/search");
 const login = require("./routes/login");
+const activePosts = require("./routes/activePosts");
 
 let DB_URL = config.get("db");
 if (app.get("env") === "production") {
@@ -54,6 +55,7 @@ app.use("/api/car-categories", carCategories);
 app.use("/api/car-makes", carMakes);
 app.use("/api/house-categories", houseCategories);
 app.use("/api/search", search);
+app.use("/api/active-posts", activePosts);
 app.use("/api/login", login);
 
 console.log(config.get("jwtPrivateKey") + " == privatekey for jwt");
