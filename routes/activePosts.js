@@ -4,10 +4,7 @@ const router = express.Router();
 const House = require("../models/house");
 const Car = require("../models/car");
 const validateObjectId = require("../middlewares/validdateObjectId");
-const Renter = require("../models/renter");
-const Agent = require("../models/agent");
 const Post = require("../models/post");
-const validateHouse = require("../helpers/joi/house-validator");
 const guard = require("../middlewares/guard");
 
 const Joi = require("joi");

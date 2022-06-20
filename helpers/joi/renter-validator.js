@@ -1,4 +1,5 @@
 const Joi = require("joi");
+Joi.objectId = require("joi-objectid")(Joi);
 module.exports = function (renter) {
   const schema = Joi.object({
     firstName: Joi.string().min(3).max(40).required(),

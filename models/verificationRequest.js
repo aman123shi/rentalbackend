@@ -8,10 +8,10 @@ const verificationRequestSchema = new mongoose.Schema({
   ],
 
   renter: { type: mongoose.Types.ObjectId, ref: "Renter" },
-  city: String,
+  city: mongoose.Types.ObjectId,
   verifiedBy: { type: mongoose.Types.ObjectId, ref: "Agent" },
-  subCity: { id: mongoose.Types.ObjectId, name: Sting },
-  status: String,
+  subCity: String,
+  status: { type: String, default: "pending" },
   description: String,
   companyType: String,
   paymentStatus: String,
