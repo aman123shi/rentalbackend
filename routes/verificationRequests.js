@@ -1,76 +1,62 @@
 const _ = require("lodash");
 const express = require("express");
 const router = express.Router();
-const Agent = require("../models/agent");
+const VerificationRequest = require("../models/verificationRequest");
 const bcrypt = require("bcrypt");
-const agentValidator = require("../helpers/joi/v");
-
-//GET api/agents
-router.get("/", async (req, res) => {
-  const users = await Agent.find().sort("-_id").select("-password -__v");
-  res.send({ success: true, body: users });
+const verificationValidator = require("../helpers/joi/verificatio-req-validator");
+const adminGuard = require("../middlewares/adminGuard");
+const guard = require("../middlewares/guard");
+//GET api/verification-requests
+router.get("/", adminGuard, async (req, res) => {
+  const requests = await VerificationRequest.find({ status: "pending" })
+    .sort("-_id")
+    .select("-__v");
+  res.send({ success: true, body: requests });
 });
 
-//POST api/agents
-router.post("/", async (req, res) => {
-  const error = agentValidator(req.body);
+//POST api/verification-requests
+router.post("/", guard, async (req, res) => {
+  const error = verificationValidator(req.body);
   if (error)
     return res.status(400).send({ success: false, message: error.message });
-  let agent = await Agent.findOne({
-    phone: req.body.phone,
-  });
-  if (agent) {
-    return res
-      .status(400)
-      .send({ success: false, message: "User already exist" });
-  }
-  agent = new Agent(
+  req.body.renter = req.user.id;
+  req.body.paymentStatus = "unpaid";
+  let request = new VerificationRequest(
     _.pick(req.body, [
-      "firstName",
-      "lastName",
-      "email",
-      "phone",
-      "password",
+      "properties",
+      "renter",
+      "description",
       "city",
       "subCity",
-      "privilege",
+      "companyType",
     ])
   );
-  await agent.hashPassword();
-  await agent.save();
-
-  let token = await agent.generateAuthToken();
+  await request.save();
 
   res.send({
     success: true,
-    body: _.omit(agent.toJSON(), ["password", "__v"]),
-    token,
+    body: _.omit(request.toJSON(), ["__v"]),
   });
 });
 
-//PUT api/agents
-router.put("/:id", async (req, res) => {
-  const error = agentValidator(req.body);
+//PUT api/verification-requests
+router.put("/:id", adminGuard, async (req, res) => {
+  const error = verificationValidator(req.body);
   if (error) {
     res.status(400).send({ success: false, message: error.message });
     return;
   }
-  if (req.body.password) {
-    let salt = await bcrypt.genSalt(10);
-    req.body.password = await bcrypt.hash(req.body.password, salt);
-  }
-  let agent = await Agent.findByIdAndUpdate(
+
+  let request = await VerificationRequest.findByIdAndUpdate(
     req.params.id,
     {
       $set: _.pick(req.body, [
-        "firstName",
-        "lastName",
-        "email",
-        "phone",
-        "password",
+        "properties",
+        "renter",
+        "description",
         "city",
         "subCity",
-        "privilege",
+        "companyType",
       ]),
     },
     {
@@ -78,32 +64,34 @@ router.put("/:id", async (req, res) => {
     }
   );
 
-  if (!agent) {
-    res
-      .status(404)
-      .send({ success: false, message: "Agent not found with this id " });
+  if (!request) {
+    res.status(404).send({
+      success: false,
+      message: "verification request not found with this id ",
+    });
     return;
   }
   res.send({
     success: true,
-    body: _.omit(agent.toJSON(), ["password", "__v"]),
+    body: _.omit(request.toJSON(), ["__v"]),
   });
 });
 
-//DELETE api/agents
+//DELETE api/verification-requests
 
-router.delete("/:id", async (req, res) => {
-  let agent = await Agent.deleteOne({
+router.delete("/:id", adminGuard, async (req, res) => {
+  let request = await VerificationRequest.deleteOne({
     _id: req.params.id,
   });
-  if (!agent)
-    return res
-      .status(404)
-      .send({ success: false, message: "Agent not found with this id " });
+  if (!request)
+    return res.status(404).send({
+      success: false,
+      message: "verification request not found with this id ",
+    });
 
   res.send({
     success: true,
-    body: _.omit(agent.toJSON(), ["password", "__V"]),
+    body: _.omit(request.toJSON(), ["__V"]),
   });
 });
 module.exports = router;

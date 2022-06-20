@@ -7,7 +7,7 @@ const mongoose = require("mongoose");
 //middleware
 const guard = require("./middlewares/guard");
 
-//routes
+//importing routes
 const agents = require("./routes/agents");
 const cities = require("./routes/cities");
 const houses = require("./routes/houses");
@@ -21,7 +21,7 @@ const search = require("./routes/search");
 const login = require("./routes/login");
 const posts = require("./routes/posts");
 const activePosts = require("./routes/activePosts");
-
+const verificationRequests = require("./routes/verificationRequests");
 let DB_URL = config.get("db");
 if (app.get("env") === "production") {
   DB_URL = config.get("db-production");
@@ -58,6 +58,7 @@ app.use("/api/house-categories", houseCategories);
 app.use("/api/search", search);
 app.use("/api/active-posts", activePosts);
 app.use("/api/posts", posts);
+app.use("/api/verification-requests", verificationRequests);
 app.use("/api/login", login);
 
 console.log(config.get("jwtPrivateKey") + " == privatekey for jwt");
