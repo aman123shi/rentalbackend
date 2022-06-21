@@ -5,7 +5,7 @@ const router = express.Router();
 const Ad = require("../models/advertisment");
 const adValidator = require("../helpers/joi/ad-validator");
 const superAdminGuard = require("../middlewares/super-admin-guard");
-
+const deleteImages = require("../helpers/images-helper");
 const { uploadAd } = require("../helpers/uploads");
 //GET api/ads
 router.get("/", async (req, res) => {
@@ -90,24 +90,11 @@ router.delete("/:id", superAdminGuard, async (req, res) => {
     return res
       .status(404)
       .send({ success: false, message: "Ad not found with this id " });
+
   //Delete images from a file
-  try {
-    //getting every images of the house from collection and delete it from a file storage
-    for (let imagePath of ad.images)
-      fs.unlink("./public/" + imagePath, (err) => {
-        if (err) throw err;
-      });
-  } catch (err) {
-    if (err && err.code == "ENOENT") {
-      console.info("File doesn't exist, won't remove it.");
-      return res.send({ success: false, message: "sorry can't find file" });
-    } else if (err) {
-      console.error("Error occurred while trying to remove file");
-      return res.send({ success: false, message: err.message });
-    } else {
-      console.info(`removed`);
-    }
-  }
+  let result = await deleteImages(ad.images);
+  if (!result.success) return res.status(400).send(result);
+
   res.send({
     success: true,
     body: _.omit(ad.toJSON(), ["__V"]),

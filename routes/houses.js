@@ -3,7 +3,7 @@ const express = require("express");
 const fs = require("fs");
 const router = express.Router();
 const House = require("../models/house");
-const validateObjectId = require("../middlewares/validdateObjectId");
+const deleteImages = require("../helpers/images-helper");
 const Renter = require("../models/renter");
 const Agent = require("../models/agent");
 const Post = require("../models/post");
@@ -146,23 +146,9 @@ router.post("/delete/:houseId", async (req, res) => {
       .status(404)
       .send({ success: false, message: "House not found with this id " });
   //Delete images from a file
-  try {
-    //getting every images of the house from collection and delete it from a file storage
-    for (let imagePath of house.images)
-      fs.unlink("./public/" + imagePath, (err) => {
-        if (err) throw err;
-      });
-  } catch (err) {
-    if (err && err.code == "ENOENT") {
-      console.info("File doesn't exist, won't remove it.");
-      return res.send({ success: false, message: "sorry can't find file" });
-    } else if (err) {
-      console.error("Error occurred while trying to remove file");
-      return res.send({ success: false, message: err.message });
-    } else {
-      console.info(`removed`);
-    }
-  }
+  let result = await deleteImages(house.images);
+  if (!result.success) return res.status(400).send(result);
+
   //removing from active post if present
   if (house.status == "active")
     await Post.findOneAndDelete({ property: req.params.houseId });
