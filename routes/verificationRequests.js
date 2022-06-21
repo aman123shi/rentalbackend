@@ -82,6 +82,7 @@ router.put("/:id", adminGuard, async (req, res) => {
 router.delete("/:id", adminGuard, async (req, res) => {
   let request = await VerificationRequest.deleteOne({
     _id: req.params.id,
+    e,
   });
   if (!request)
     return res.status(404).send({
