@@ -21,6 +21,7 @@ const search = require("./routes/search");
 const login = require("./routes/login");
 const posts = require("./routes/posts");
 const activePosts = require("./routes/activePosts");
+const images = require("./routes/images");
 const verificationRequests = require("./routes/verificationRequests");
 let DB_URL = config.get("db");
 if (app.get("env") === "production") {
@@ -58,6 +59,7 @@ app.use("/api/house-categories", houseCategories);
 app.use("/api/search", search);
 app.use("/api/active-posts", activePosts);
 app.use("/api/posts", posts);
+app.use("/api/images", images);
 app.use("/api/verification-requests", verificationRequests);
 app.use("/api/login", login);
 
