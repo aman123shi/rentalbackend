@@ -3,7 +3,7 @@ const express = require("express");
 const router = express.Router();
 const House = require("../models/house");
 const Car = require("../models/car");
-const validateObjectId = require("../middlewares/validdateObjectId");
+const validateObjectId = require("../middlewares/validateObjectId");
 const Post = require("../models/post");
 const guard = require("../middlewares/guard");
 
