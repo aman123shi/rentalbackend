@@ -3,7 +3,7 @@ const app = express();
 const cors = require("cors");
 const config = require("config");
 const mongoose = require("mongoose");
-
+require("dotenv").config();
 //middleware
 const guard = require("./middlewares/guard");
 
@@ -22,6 +22,7 @@ const login = require("./routes/login");
 const posts = require("./routes/posts");
 const activePosts = require("./routes/activePosts");
 const images = require("./routes/images");
+const auth = require("./routes/signUp");
 const verificationRequests = require("./routes/verificationRequests");
 let DB_URL = config.get("db");
 if (app.get("env") === "production") {
@@ -62,6 +63,7 @@ app.use("/api/posts", posts);
 app.use("/api/images", images);
 app.use("/api/verification-requests", verificationRequests);
 app.use("/api/login", login);
+app.use("/api/auth", auth);
 
 console.log(config.get("jwtPrivateKey") + " == privatekey for jwt");
 const port = process.env.PORT || 3000;

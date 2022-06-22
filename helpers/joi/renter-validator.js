@@ -12,6 +12,8 @@ module.exports = function (renter) {
     },
     city: Joi.objectId(),
     password: Joi.string().min(6).max(20).required(),
+    hash: Joi.string().min(6).max(500).required(),
+    otp: Joi.string().min(4).max(20).required(),
   });
   const { error } = schema.validate(renter);
 

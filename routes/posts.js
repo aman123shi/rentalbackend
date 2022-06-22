@@ -4,7 +4,6 @@ const router = express.Router();
 const Post = require("../models/house");
 const validateObjectId = require("../middlewares/validdateObjectId");
 const Agent = require("../models/agent");
-const Post = require("../models/post");
 const validatePostUpdate = require("../helpers/joi/update-post-validator");
 const Car = require("../models/car");
 const guard = require("../middlewares/guard");

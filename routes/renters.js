@@ -68,9 +68,13 @@ router.post("/", async (req, res) => {
       "password",
       "city",
       "subCity",
-      "posts",
+      "hash",
+      "otp",
     ])
   );
+  let validOtp = renter.verifyOtp(req.body);
+  if (!validOtp.success) return res.send(validOtp);
+
   await renter.hashPassword();
   await renter.save();
   let token = await renter.generateAuthToken();
@@ -105,7 +109,8 @@ router.put("/:id", guard, async (req, res) => {
         "password",
         "city",
         "subCity",
-        "posts",
+        "hash",
+        "otp",
       ]),
     },
     {

@@ -1,4 +1,6 @@
 {
   "jwtPrivateKey": "Ethio_Rental_Private_Key",
-  "db-production": "Rental_DB"
+  "db-production": "Rental_DB",
+  "twilio-sid": "Twilio_SID",
+  "twilio-auth-token": "Twilio_Auth_Token"
 }
