@@ -20,7 +20,7 @@ const bookingSchema = new mongoose.Schema({
   propertyCity: String,
   verifiedBy: { type: mongoose.Types.ObjectId, ref: "Agent" },
   propertySubCity: { id: mongoose.Types.ObjectId, name: Sting },
-  status: String,
+  status: String, //to be verified after tenant see the house
   paymentStatus: String,
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },

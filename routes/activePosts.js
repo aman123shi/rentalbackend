@@ -9,7 +9,7 @@ const guard = require("../middlewares/guard");
 
 const Joi = require("joi");
 Joi.objectId = require("joi-objectid")(Joi);
-//property status => active inactive pending declined
+//property status => active, inactive, pending, declined,
 //if quantity = o remove from active listing just set quantity 0 to remove from active listing
 //PUT api/active-posts/update-quantity
 router.put("/update-quantity", guard, async (req, res) => {

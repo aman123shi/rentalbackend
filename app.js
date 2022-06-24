@@ -63,7 +63,7 @@ app.use("/api/posts", posts);
 app.use("/api/images", images);
 app.use("/api/verification-requests", verificationRequests);
 app.use("/api/login", login);
-app.use("/api/auth", auth);
+app.use("/api/auth", auth); //sign-up
 
 console.log(config.get("jwtPrivateKey") + " == privatekey for jwt");
 const port = process.env.PORT || 3000;
