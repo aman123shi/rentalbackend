@@ -129,28 +129,31 @@ router.put("/:id", guard, async (req, res) => {
     body: _.omit(renter.toJSON(), ["password", "__v"]),
   });
 });
-//POST api/renters/signup
-//accessed by renters and agents
-router.post("/signup", async (req, res) => {
+//POST api/renters/recover-password
+//accessed by renters after forget password
+router.post("/recover-password", async (req, res) => {
   const error = renterValidator(req.body);
-  if (error) {
-    res.status(400).send({ success: false, message: error.message });
-    return;
+  if (error)
+    return res.status(400).send({ success: false, message: error.message });
+  let renter = await Renter.findOne({
+    phone: req.body.phone,
+  });
+  if (!renter) {
+    return res
+      .status(400)
+      .send({ success: false, message: "User does not exist" });
   }
+  let validOtp = renter.verifyOtp(req.body);
+  if (!validOtp.success) return res.send(validOtp);
+
+  await renter.hashPassword();
+  await renter.save();
+
   if (req.body.password) {
     let salt = await bcrypt.genSalt(10);
     req.body.password = await bcrypt.hash(req.body.password, salt);
   }
-  let renter = new Renter(
-    _.pick(req.body, [
-      "firstName",
-      "lastName",
-      "phone",
-      "password",
-      "city",
-      "subCity",
-    ])
-  );
+  renter.password = req.body.password;
 
   await renter.save();
   let token = await renter.generateAuthToken();
