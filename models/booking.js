@@ -7,21 +7,22 @@ const bookingSchema = new mongoose.Schema({
     min: 1,
     max: 255,
   },
-  property: {
+  house: {
     type: mongoose.Types.ObjectId,
-    required: true,
-    ref: function () {
-      return this.propertyType;
-    },
+    ref: "House",
   },
-
-  propertyRenter: { type: mongoose.Types.ObjectId, ref: "Renter" },
+  car: {
+    type: mongoose.Types.ObjectId,
+    ref: "Car",
+  },
+  renter: { type: mongoose.Types.ObjectId, ref: "Renter" },
   tenant: { type: mongoose.Types.ObjectId, ref: "Renter" },
-  propertyCity: String,
   verifiedBy: { type: mongoose.Types.ObjectId, ref: "Agent" },
-  propertySubCity: { id: mongoose.Types.ObjectId, name: Sting },
+  propertyCity: { type: mongoose.Types.ObjectId },
+  subCity: String,
+  amount: Number,
   status: String, //to be verified after tenant see the house
-  paymentStatus: String,
+  paymentStatus: String, //payed
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
 });
