@@ -7,6 +7,7 @@ const {
   signOtpToken,
 } = require("../helpers/twilio-otp-helper");
 
+// POST api/auth/sign-up
 router.post("/sign-up", async (req, res) => {
   const error = req.body.phone === null;
   if (error)
@@ -22,7 +23,10 @@ router.post("/sign-up", async (req, res) => {
   let otp = await generateOTP();
   console.log("generated otp is " + otp);
   try {
-    let message = await sendOtp(otp, req.body.phone);
+    let message = await sendOtp(
+      "your Ethio rental Verification code is " + otp,
+      req.body.phone
+    );
     console.log("message:-", message);
     let hash = await signOtpToken(otp, req.body.phone, 60);
     res.status(200).send({ success: true, hash, phone: req.body.phone });

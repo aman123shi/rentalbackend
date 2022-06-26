@@ -9,7 +9,7 @@ const client = require("twilio")(accountSid, authToken, {
 });
 async function sendOtp(otp, phone) {
   return client.messages.create({
-    body: "your Ethio rental Verification code is " + otp,
+    body: otp,
     to: phone, // Text this number
     from: "+19893651747", // From a valid Twilio number
   });
