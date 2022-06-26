@@ -3,6 +3,7 @@ const express = require("express");
 const router = express.Router();
 const Renter = require("../models/renter");
 const bcrypt = require("bcrypt");
+const passwordRecoveryValidator = require("../helpers/joi/recover-password-validator");
 const renterValidator = require("../helpers/joi/renter-validator");
 const guard = require("../middlewares/guard");
 const adminGuard = require("../middlewares/adminGuard");
@@ -132,7 +133,7 @@ router.put("/:id", guard, async (req, res) => {
 //POST api/renters/recover-password
 //accessed by renters after forget password
 router.post("/recover-password", async (req, res) => {
-  const error = renterValidator(req.body);
+  const error = passwordRecoveryValidator(req.body);
   if (error)
     return res.status(400).send({ success: false, message: error.message });
   let renter = await Renter.findOne({
@@ -145,9 +146,6 @@ router.post("/recover-password", async (req, res) => {
   }
   let validOtp = renter.verifyOtp(req.body);
   if (!validOtp.success) return res.send(validOtp);
-
-  await renter.hashPassword();
-  await renter.save();
 
   if (req.body.password) {
     let salt = await bcrypt.genSalt(10);
