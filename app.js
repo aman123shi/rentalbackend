@@ -3,7 +3,10 @@ const app = express();
 const cors = require("cors");
 const config = require("config");
 const mongoose = require("mongoose");
+const compression = require("compression");
+//loading environmental variables
 require("dotenv").config();
+
 //middleware
 const guard = require("./middlewares/guard");
 
@@ -40,13 +43,14 @@ app.use(
   })
 );
 app.use(express.static("public"));
-if (!config.get("jwtPrivateKey")) {
+if (!process.env.Ethio_Rental_Private_Key) {
   console.log(
     "FATAL ERROR: jwtPrivatekey not defined in environmental variable == ",
-    config.get("jwtPrivateKey")
+    process.env.Ethio_Rental_Private_Key
   );
   process.exit(1);
 }
+app.use(compression());
 //mapping routes
 app.use("/api/agents", agents);
 app.use("/api/cities", cities);
@@ -65,7 +69,6 @@ app.use("/api/verification-requests", verificationRequests);
 app.use("/api/login", login);
 app.use("/api/auth", auth); //sign-up forget-password
 
-console.log(config.get("jwtPrivateKey") + " == privatekey for jwt");
 const port = process.env.PORT || 3000;
 const server = app.listen(port, () =>
   console.log(`Listening on port ${port}.............`)

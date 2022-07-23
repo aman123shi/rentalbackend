@@ -1,9 +1,8 @@
 const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
-const config = require("config");
 const crypto = require("crypto");
-require("twilio");
+
 const renterSchema = new mongoose.Schema({
   firstName: {
     type: String,
@@ -38,7 +37,7 @@ renterSchema.methods.generateAuthToken = function () {
       id: this._id,
       userType: "renter",
     },
-    config.get("jwtPrivateKey")
+    process.env.Ethio_Rental_Private_Key
   );
   return token;
 };
@@ -53,7 +52,7 @@ renterSchema.methods.verifyOtp = function (params) {
     return { success: false, message: "otp expired please try again" };
   let data = `${params.phone}.${params.otp}.${expires}`;
   let newHash = crypto
-    .createHmac("sha256", config.get("jwtPrivateKey"))
+    .createHmac("sha256", process.env.Ethio_Rental_Private_Key)
     .update(data)
     .digest("hex");
   if (hash !== newHash)

@@ -1,8 +1,7 @@
-const config = require("config");
 const crypto = require("crypto");
 const OTP_Generator = require("otp-generator");
-const accountSid = config.get("twilio-sid"); // Your Account SID from www.twilio.com/console
-const authToken = config.get("twilio-auth-token"); // Your Auth Token from www.twilio.com/console
+const accountSid = process.env.Twilio_SID; // Your Account SID from www.twilio.com/console
+const authToken = process.env.Twilio_Auth_Token; // Your Auth Token from www.twilio.com/console
 
 const client = require("twilio")(accountSid, authToken, {
   lazyLoading: true,
@@ -28,7 +27,7 @@ async function signOtpToken(otp, phone, minute) {
   let expires = Date.now() + durationOfValidity;
   let data = `${phone}.${otp}.${expires}`;
   let hash = crypto
-    .createHmac("sha256", config.get("jwtPrivateKey"))
+    .createHmac("sha256", process.env.Ethio_Rental_Private_Key)
     .update(data)
     .digest("hex");
   return `${hash}.${expires}`;
