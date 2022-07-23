@@ -5,15 +5,15 @@ const router = express.Router();
 const Renter = require("../models/renter");
 const Agent = require("../models/agent");
 const Admin = require("../models/admin");
-
+//POST api/login/renter
 router.post("/renter", async (req, res) => {
   authenticate(req, res, Renter);
 });
-
+//POST api/login/agent
 router.post("/agent", async (req, res) => {
   authenticate(req, res, Agent);
 });
-
+//POST api/login/admin
 router.post("/admin", async (req, res) => {
   authenticate(req, res, Admin);
 });
@@ -30,14 +30,14 @@ async function authenticate(req, res, User) {
   if (!user)
     return res
       .status(400)
-      .send({ success: false, message: "Invalid phone or //password" });
+      .send({ success: false, message: "Invalid phone or password" });
 
   let match = await bcrypt.compare(req.body.password, user.password);
 
   if (!match)
     return res
       .status(400)
-      .send({ success: false, message: "Invalid //phone or password" });
+      .send({ success: false, message: "Invalid phone or password" });
   let token = user.generateAuthToken();
   res.send({
     success: true,

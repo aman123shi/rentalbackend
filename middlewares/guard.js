@@ -5,7 +5,7 @@ module.exports = async (req, res, next) => {
   if (!token)
     return res.status(401).send("Access Denied:token should be provided");
   try {
-    let decode = jwt.verify(token, config.get("jwtPrivateKey"));
+    let decode = jwt.verify(token, process.env.Ethio_Rental_Private_Key);
     req.user = decode;
     next();
   } catch (error) {
