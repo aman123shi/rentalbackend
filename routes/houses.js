@@ -73,7 +73,9 @@ router.post("/", guard, upload.array("images", 4), async (req, res) => {
     city: house.city,
     renter: renter._id,
     subCity: house.subCity,
+    status: "pending",
   });
+  /*
   if (req.user.userType === "agent") {
     house.agent = req.user.id;
     house.isApproved = true;
@@ -82,7 +84,7 @@ router.post("/", guard, upload.array("images", 4), async (req, res) => {
     post.agent = req.user.id;
     post.isAgentPost = true;
     post.status = "active";
-  }
+  } */
   await house.save();
   await post.save();
   res.send({

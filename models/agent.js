@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
-const config = require("config");
+
 const agentSchema = new mongoose.Schema({
   firstName: {
     type: String,
@@ -40,6 +40,7 @@ const agentSchema = new mongoose.Schema({
       condition: String,
     },
   ],
+  renterId: { type: mongoose.Types.ObjectId, ref: "Renter" },
 });
 agentSchema.methods.generateAuthToken = function () {
   let token = jwt.sign(
@@ -48,7 +49,7 @@ agentSchema.methods.generateAuthToken = function () {
       userType: "agent",
       privilege: this.privilege,
     },
-    config.get("jwtPrivateKey")
+    process.env.Ethio_Rental_Private_Key
   );
   return token;
 };

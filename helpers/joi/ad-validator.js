@@ -6,7 +6,7 @@ module.exports = function (ad) {
     duration: Joi.number(),
     title: Joi.string().min(3).max(20).required(),
     description: Joi.string().max(255).required(),
-    postedBy: Joi.objectId().required(),
+    postedBy: Joi.objectId(),
     status: Joi.string().min(3).max(20).required(),
     images: Joi.array().items(),
   });

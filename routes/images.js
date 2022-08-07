@@ -65,7 +65,7 @@ router.post(
 router.put("/delete-image/:propertyid", adminGuard, async (req, res) => {
   //renterGuard required
 
-  // {propertyType,imagePath,propertyId}
+  // {propertyType,imagePath}
   const error = imageDataValidator(req.body);
   if (error) {
     res.status(400).send({ success: false, message: error.message });

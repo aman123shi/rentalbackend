@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const config = require("config");
+
 const adminSchema = new mongoose.Schema({
   firstName: {
     type: String,
@@ -35,7 +35,7 @@ adminSchema.methods.generateAuthToken = function () {
       id: this._id,
       userType: "admin",
     },
-    config.get("jwtPrivateKey")
+    process.env.Ethio_Rental_Private_Key
   );
   return token;
 };

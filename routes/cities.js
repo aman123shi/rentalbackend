@@ -30,7 +30,7 @@ router.post("/", async (req, res) => {
   }
 
   await city.save();
-  res.send({ success: true, body: _.omit(city, ["password"]) });
+  res.send({ success: true, body: _.omit(city, ["__v"]) });
 });
 
 //PUT api/cities

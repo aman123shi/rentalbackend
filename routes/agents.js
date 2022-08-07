@@ -96,6 +96,7 @@ router.delete("/:id", async (req, res) => {
   let agent = await Agent.deleteOne({
     _id: req.params.id,
   });
+  console.log(agent);
   if (!agent)
     return res
       .status(404)
@@ -103,7 +104,8 @@ router.delete("/:id", async (req, res) => {
 
   res.send({
     success: true,
-    body: _.omit(agent.toJSON(), ["password", "__V"]),
+    body: { _id: 1 },
   });
 });
+
 module.exports = router;

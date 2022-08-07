@@ -29,11 +29,11 @@ router.post(
         "duration",
         "title",
         "description",
-        "postedBy",
         "status",
         "images",
       ])
     );
+    ad.postedBy = req.user.id;
     for (let image of req.files) ad.images.push("ads/" + image.filename);
     await ad.save();
 
@@ -46,6 +46,7 @@ router.post(
 
 //PUT api/ads
 router.put("/:id", superAdminGuard, async (req, res) => {
+
   const error = adValidator(req.body);
   if (error) {
     res.status(400).send({ success: false, message: error.message });
@@ -60,9 +61,7 @@ router.put("/:id", superAdminGuard, async (req, res) => {
         "duration",
         "title",
         "description",
-        "postedBy",
         "status",
-        "images",
       ]),
     },
     {

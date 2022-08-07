@@ -17,6 +17,8 @@ const bookingSchema = new mongoose.Schema({
   },
   renter: { type: mongoose.Types.ObjectId, ref: "Renter" },
   tenant: { type: mongoose.Types.ObjectId, ref: "Renter" },
+  renterPhone: String,
+  tenantPhone: String,
   verifiedBy: { type: mongoose.Types.ObjectId, ref: "Agent" },
   propertyCity: { type: mongoose.Types.ObjectId },
   subCity: String,
