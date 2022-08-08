@@ -12,6 +12,7 @@ const guard = require("./middlewares/guard");
 
 //importing routes
 const agents = require("./routes/agents");
+const reports = require("./routes/reports");
 const latestPosts = require("./routes/latestPosts");
 const cities = require("./routes/cities");
 const houses = require("./routes/houses");
@@ -65,6 +66,7 @@ app.use("/api/house-categories", houseCategories);
 app.use("/api/search", search);
 app.use("/api/active-posts", activePosts);
 app.use("/api/posts", posts);
+app.use("/api/reports", reports);
 app.use("/api/images", images);
 app.use("/api/latest", latestPosts);
 app.use("/api/verification-requests", verificationRequests);
