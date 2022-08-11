@@ -14,6 +14,7 @@ const House = require("../models/house");
 const jwt = require("jsonwebtoken");
 const axios = require("axios").default;
 const axiosRetry = require("axios-retry");
+const { query } = require("express");
 let CHAPA_SECRET_KEY = process.env.CHAPA_SECRET_KEY;
 let config = {
   headers: {
@@ -31,11 +32,13 @@ router.get("/", adminGuard, async (req, res) => {
   let subCity,
     cityId,
     status = req.query.status,
-    pageNumber = 1,
-    limit = 10,
+    pageNumber = req.query.pageNumber || 1,
+    limit = req.query.limit || 10,
+    tenantId = req.query.tenantId,
     query = {};
 
   if (status) query.status = status;
+  if (tenantId) query.tenant = tenantId;
   const bookings = await Booking.find(query)
     .sort("createdAt")
     .select("-__v")
@@ -161,6 +164,8 @@ router.get("/success", async (req, res) => {
   query.propertyType = transactionData.propertyType;
   query.renter = renter._id;
   query.tenant = transactionData.tenantId;
+  query.renterPhone = renter.phone;
+  query.tenantPhone = tenant.phone;
   query.amount = property.price;
   query.status = "pending"; //pending,canceled,confirmed
   query.paymentStatus = "payed";
