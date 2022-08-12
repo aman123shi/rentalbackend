@@ -53,6 +53,7 @@ const houseSchema = new mongoose.Schema(
     agent: { type: mongoose.Types.ObjectId, ref: "Agent" },
     owner: { type: mongoose.Types.ObjectId, ref: "Renter" },
     quantity: Number,
+    paymentConfirmationDays: Number,
   },
   { timestamps: true }
 );

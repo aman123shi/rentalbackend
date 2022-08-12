@@ -16,6 +16,8 @@ const adminGuard = require("../middlewares/adminGuard");
 router.get("/", adminGuard, async (req, res) => {
   let subCity = [],
     cityId,
+    page = req.query.page || 1,
+    limit = req.query.limit || 10,
     query = {};
   if (req.user.userType === "agent") {
     let agent = await Agent.findById(req.user.id);
@@ -24,7 +26,11 @@ router.get("/", adminGuard, async (req, res) => {
     query = { city: cityId, subCity: { $in: subCity } };
   }
 
-  const houses = await House.find(query).sort("-_id").select("-__v");
+  const houses = await House.find(query)
+    .sort("-_id")
+    .select("-__v")
+    .skip((page - 1) * limit) //pagination
+    .limit(limit); // items per page;
   res.send({ success: true, body: houses });
 });
 
@@ -50,6 +56,7 @@ router.post("/", guard, upload.array("images", 4), async (req, res) => {
       "location",
       "features",
       "isVerified",
+      "isApproved",
       "status",
       "category",
       "owner",
@@ -100,7 +107,7 @@ router.put("/:id", async (req, res) => {
     res.status(400).send({ success: false, message: error.message });
     return;
   }
-
+  console.log(req.body);
   let house = await House.findByIdAndUpdate(
     req.params.id,
     {

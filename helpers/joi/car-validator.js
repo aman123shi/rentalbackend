@@ -12,16 +12,17 @@ module.exports = function (car) {
     bodyType: Joi.string().required(),
     engineType: Joi.string().required(),
     transmission: Joi.string().required(),
-    email: Joi.string().email().required(),
-    password: Joi.string().min(6).max(20).required(),
     city: Joi.objectId(),
     category: Joi.string(),
     features: Joi.array().items(Joi.string().max(30)),
     quantity: Joi.number().required(),
     make: Joi.string().max(40),
     images: Joi.array().items(Joi.string().max(255)),
-    model: Joi.objectId(),
+    model: Joi.string(),
     isVerified: Joi.boolean(),
+    isApproved: Joi.boolean(),
+    paymentConfirmationDays: Joi.number(),
+    paymentDeadline: Joi.number(),
   });
   const { error } = schema.validate(car);
   return error;

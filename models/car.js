@@ -46,6 +46,7 @@ const carSchema = new mongoose.Schema(
     isVerified: Boolean,
     isApproved: Boolean,
     owner: { type: mongoose.Types.ObjectId, ref: "Renter" },
+    paymentConfirmationDays: Number,
     model: String, // user provided field
     quantity: Number,
   },

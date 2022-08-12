@@ -33,7 +33,61 @@ router.get("/", adminGuard, async (req, res) => {
   res.send({ success: true, body: posts });
 });
 //agents create verified listing
+//***** */
+//agents get posts based on there city and subCites
+router.get("/houses", adminGuard, async (req, res) => {
+  let subCity = [],
+    cityId = "",
+    page = req.query.page || 1,
+    limit = req.query.limit || 10,
+    query;
 
+  let agent = await Agent.findById(req.user.id);
+  cityId = agent.city;
+  for (let sc of agent.subCity) subCity.push(sc.name);
+  query = {
+    postType: "House",
+    status: "pending",
+    city: cityId,
+    subCity: { $in: subCity },
+  };
+  console.log(subCity);
+  const pendingPosts = await Post.find(query)
+    .sort("updatedAt")
+    .select("-__v")
+    .populate("house")
+    .skip((page - 1) * limit) //pagination
+    .limit(limit); // items per page
+
+  const totalRecords = await Post.countDocuments(query);
+  res.send({ success: true, body: pendingPosts, totalRecords });
+});
+router.get("/cars", adminGuard, async (req, res) => {
+  let subCity = [],
+    cityId = "",
+    page = req.query.page || 1,
+    limit = req.query.limit || 10,
+    query;
+
+  let agent = await Agent.findById(req.user.id);
+  cityId = agent.city;
+  for (let sc of agent.subCity) subCity.push(sc.name);
+  query = {
+    postType: "Car",
+    status: "pending",
+    city: cityId,
+  };
+  console.log(subCity);
+  const pendingPosts = await Post.find(query)
+    .sort("updatedAt")
+    .select("-__v")
+    .populate("car")
+    .skip((page - 1) * limit) //pagination
+    .limit(limit); // items per page
+
+  const totalRecords = await Post.countDocuments(query);
+  res.send({ success: true, body: pendingPosts, totalRecords });
+});
 //PUT api/posts
 // agent approval or decline will be done using this end points
 router.put("/:id", validateObjectId, async (req, res) => {
@@ -50,11 +104,11 @@ router.put("/:id", validateObjectId, async (req, res) => {
     return;
   }
   if (req.body.status == "active") {
-    req.body.updatedAt = new Date();
+    // req.body.updatedAt = new Date();
     let post = await Post.findByIdAndUpdate(
       req.params.id,
       {
-        $set: _.pick(req.body, ["status", "updatedAt"]),
+        $set: _.pick(req.body, ["status"]),
       },
       {
         new: true,

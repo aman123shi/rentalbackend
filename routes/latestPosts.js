@@ -4,7 +4,7 @@ const router = express.Router();
 const Post = require("../models/post");
 const Car = require("../models/car");
 const House = require("../models/house");
-
+// this end point is for renters from mobile UI
 //GET api/latest/houses
 router.get("/houses", async (req, res) => {
   let subCity = req.query.subCity,

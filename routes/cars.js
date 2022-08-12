@@ -16,22 +16,17 @@ const adminGuard = require("../middlewares/adminGuard");
 router.get("/", adminGuard, async (req, res) => {
   let subCity = [],
     cityId,
-    query = {};
-  if (req.user.userType === "agent") {
-    for (let p of req.user.privilege) {
-      if (p.name == "Car" && p.r == true) {
-        let cars = await Car.find(query).sort("-_id").select("-__v");
-        return res.send({ success: true, body: cars });
-      }
-    }
-    return res.status(401).send({
-      success: false,
-      message: "Access denied: you dont have enough privilege",
-    });
-  }
+    query = {},
+    page = req.query.page || 1,
+    limit = req.query.limit || 10;
 
-  const cars = await Car.find().sort("-_id").select("-__v");
-  res.send({ success: true, body: cars });
+  const totalRecords = await Car.countDocuments(query);
+  const cars = await Car.find()
+    .sort("-_id")
+    .select("-__v")
+    .skip((page - 1) * limit) //pagination
+    .limit(limit); // items per page
+  res.send({ success: true, body: cars, totalRecords });
 });
 
 //POST api/cars
@@ -49,13 +44,17 @@ router.post("/", guard, upload.array("images", 4), async (req, res) => {
       "description",
       "price",
       "pricingRate",
-      "size",
+      "make",
+      "model",
+      "bodyType",
       "city",
-      "subCity",
+      "engineType",
+      "transmission",
       "prePaidPaymentTerm",
-      "location",
       "features",
       "isVerified",
+      "isApproved",
+      "paymentConfirmationDays",
       "status",
       "category",
       "owner",
